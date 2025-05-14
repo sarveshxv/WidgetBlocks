@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Time Tracker</title>
+  <link href="https://fonts.googleapis.com/css2?family=Julius+Sans+One&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --color-bg: #162F2C;
+      --color-text: #ffffff;
+      --color-border: #ffffff;
+      --color-progress-bg: #829f9466;
+      --color-progress-fill: #D9BBB0;
+      --font-main: "Julius Sans One", sans-serif;
+    }
+
+    body {
+      background: var(--color-bg);
+      color: var(--color-text);
+      font-family: var(--font-main);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      position: relative;
+    }
+
+    .timer-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .timer {
+      font-size: 4vh;
+      margin-bottom: 2vh;
+    }
+
+    .hours {
+      font-size: 2.5vh;
+      margin-top: 2vh;
+    }
+
+    .progress-container {
+      width: 80vw;
+      max-width: 500px;
+      height: 28px;
+      background-color: var(--color-progress-bg);
+      border-top: 1px solid var(--color-border);
+      border-bottom: 1px solid var(--color-border);
+      overflow: hidden;
+      position: relative;
+      margin: 1vh 0;
+      display: flex;
+      align-items: center;
+      padding: 0 1.5vh;
+      box-sizing: border-box;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background-color: var(--color-progress-fill);
+      width: 0%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 1;
+      transition: width 0.5s ease-in-out;
+    }
+
+    .progress-labels {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 2.5vh;
+      font-weight: 700;
+      color: var(--color-bg);
+    }
+
+    .progress-labels span:last-child {
+      letter-spacing: 1px;
+    }
+
+    .title {
+      font-size: 4vh;
+      position: absolute;
+      bottom: 4vh;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="timer-wrapper">
+    <div class="timer" id="timer">
+      <span id="days">00</span>:<span id="hours">00</span>:<span id="minutes">00</span>:<span id="seconds">00</span>
+    </div>
+
+    <div class="progress-container">
+      <div class="progress-bar" id="progress-bar"></div>
+      <div class="progress-labels">
+        <span id="label-title">Label</span>
+        <span id="progress-text">0.00%</span>
+      </div>
+    </div>
+
+    <div class="hours"><span id="total-hours"></span> Hours</div>
+  </div>
+
+  <div class="title" id="block-title">Time Elapsed</div>
+
+  <script>
+    // === CONFIGURABLE VARIABLES ===    
+    const trackerTitle = "Nico Free";        // Used in progress bar
+    const blockTitle = "Nicotine Tracker";  // Used as the bottom title
+    const startTime = new Date("2025-05-14T19:10:00");
+    const endTime = new Date("2025-05-15T19:10:00"); 
+
+
+    // === SET LABEL TITLE ===
+    document.getElementById("label-title").textContent = trackerTitle;
+    document.getElementById("block-title").textContent = blockTitle;
+
+
+    function updateElapsedTime() {
+      const now = new Date();
+      const elapsed = now - startTime;
+      const total = endTime - startTime;
+      const progress = Math.min((elapsed / total) * 100, 100);
+
+      const days = Math.floor(elapsed / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((elapsed / (1000 * 60 * 60)) % 24);
+      const minutes = Math.floor((elapsed / (1000 * 60)) % 60);
+      const seconds = Math.floor((elapsed / 1000) % 60);
+      const totalHours = Math.floor(elapsed / (1000 * 60 * 60));
+
+      document.getElementById('days').textContent = String(days).padStart(2, '0');
+      document.getElementById('hours').textContent = String(hours).padStart(2, '0');
+      document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
+      document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
+      document.getElementById('total-hours').textContent = totalHours;
+
+      document.getElementById('progress-bar').style.width = `${progress}%`;
+      document.getElementById('progress-text').textContent = `${progress.toFixed(2)}%`;
+    }
+
+    setInterval(updateElapsedTime, 1000);
+    updateElapsedTime(); // Initial call
+  </script>
+
+</body>
+</html>
